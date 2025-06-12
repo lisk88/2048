@@ -590,8 +590,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(30, 30, 30, 0.95);
+            backdrop-filter: blur(15px);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -599,24 +599,78 @@
             border-radius: 20px;
             z-index: 10;
             text-align: center;
-            color: #2c3e50;
-            padding: 20px;
+            color: white;
+            padding: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-message.game-won {
+            background: rgba(46, 125, 50, 0.95);
+            border-color: rgba(129, 199, 132, 0.3);
+        }
+
+        .game-message.game-over {
+            background: rgba(183, 28, 28, 0.95);
+            border-color: rgba(239, 154, 154, 0.3);
+        }
+
+        .game-message.game-stuck {
+            background: rgba(255, 152, 0, 0.95);
+            border-color: rgba(255, 204, 128, 0.3);
+        }
+
+        .game-message-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            animation: messageIconPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes messageIconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .game-message p {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            line-height: 1.2;
+        }
+
+        .game-message-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            font-weight: normal;
         }
         
         .game-message .restart-button {
-             background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 15px;
-            padding: 12px 24px;
+            padding: 15px 30px;
             color: white;
             font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+            outline: none;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .game-message .restart-button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .game-message .restart-button:active {
+            transform: translateY(0);
         }
         
         .message-buttons {
@@ -652,6 +706,95 @@
         .copyright .divider {
             margin: 0 8px;
             opacity: 0.5;
+        }
+
+        /* 推荐游戏卡片样式 */
+        .recommended-games {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            padding: 20px;
+            width: 280px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .game-card:hover::before {
+            left: 100%;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .game-card-icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .game-card-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-card-description {
+            font-size: 14px;
+            line-height: 1.5;
+            opacity: 0.9;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .game-card-link {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            margin: 0 auto;
+            display: block;
+            text-align: center;
+            width: fit-content;
+        }
+
+        .game-card-link:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
         }
 
         /* 响应式设计 */
@@ -711,6 +854,21 @@
             .instructions { font-size: 12px; }
             .game-instructions { font-size: 12px; padding: 15px; }
             .copyright { font-size: 11px; padding: 10px; }
+            .game-message p {
+                font-size: 22px;
+                margin-bottom: 15px;
+            }
+            .game-message-icon {
+                font-size: 36px;
+                margin-bottom: 10px;
+            }
+            .game-message-subtitle {
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+            .game-message {
+                padding: 20px;
+            }
         }
 
         /* 超小屏幕优化 */
@@ -725,6 +883,33 @@
                 padding: 6px 12px; 
                 min-width: 70px;
                 font-size: 16px;
+            }
+            .game-message p {
+                font-size: 20px;
+            }
+            .game-message-icon {
+                font-size: 32px;
+            }
+            .game-message-subtitle {
+                font-size: 12px;
+            }
+            .game-message {
+                padding: 15px;
+            }
+            .recommended-games {
+                margin-top: 20px;
+                gap: 15px;
+            }
+            .game-card {
+                width: 100%;
+                max-width: 300px;
+                padding: 15px;
+            }
+            .game-card-title {
+                font-size: 18px;
+            }
+            .game-card-description {
+                font-size: 13px;
             }
         }
 
@@ -803,6 +988,18 @@
                 </ul>
             </article>
             
+            <!-- 推荐游戏 -->
+            <section class="recommended-games">
+                <a href="https://playwordly.com/" target="_blank" rel="noopener noreferrer" class="game-card">
+                    <div class="game-card-icon">
+                        <img src="wordle.png" alt="Wordle" style="width: 48px; height: 48px; border-radius: 8px;">
+                    </div>
+                    <div class="game-card-title" data-i18n="worldleTitle">Wordle - 单词猜谜游戏</div>
+                    <div class="game-card-description" data-i18n="worldleDescription">6次机会猜出一个5字母单词。每日挑战你的词汇量，享受经典的文字游戏乐趣！</div>
+                    <span class="game-card-link" data-i18n="playNow">立即游玩</span>
+                </a>
+            </section>
+
             <!-- 版权信息 -->
             <div class="copyright">
                 <p>
@@ -879,7 +1076,11 @@
                 supportedBrowsers: '支持的浏览器：Chrome, Firefox, Safari, Edge',
                 bestResolution: '最佳体验分辨率：1920x1080',
                 selectBackground: '选择背景',
-                close: '关闭'
+                close: '关闭',
+                recommendedGames: '推荐游戏',
+                worldleTitle: 'Wordle - 单词猜谜游戏',
+                worldleDescription: '6次机会猜出一个5字母单词。每日挑战你的词汇量，享受经典的文字游戏乐趣！',
+                playNow: '立即游玩'
             },
             en: {
                 score: 'SCORE',
@@ -918,7 +1119,11 @@
                 supportedBrowsers: 'Supported Browsers: Chrome, Firefox, Safari, Edge',
                 bestResolution: 'Best Experience Resolution: 1920x1080',
                 selectBackground: 'Select Background',
-                close: 'Close'
+                close: 'Close',
+                recommendedGames: 'Recommended Games',
+                worldleTitle: 'Wordle - Word Guessing Game',
+                worldleDescription: 'Get 6 chances to guess a 5-letter word.',
+                playNow: 'Play Now'
             }
         };
 
@@ -1551,9 +1756,41 @@
             
             showMessage(text, className) {
                 this.messageContainer.innerHTML = '';
+                
+                // 添加图标
+                const icon = document.createElement('div');
+                icon.className = 'game-message-icon';
+                if (className === 'game-won') {
+                    icon.textContent = '🎉';
+                } else if (className === 'game-over') {
+                    icon.textContent = '😵';
+                } else if (className === 'game-stuck') {
+                    icon.textContent = '🤔';
+                }
+                this.messageContainer.appendChild(icon);
+
+                // 主标题
                 const p = document.createElement('p');
                 p.textContent = text;
                 this.messageContainer.appendChild(p);
+
+                // 副标题
+                const subtitle = document.createElement('div');
+                subtitle.className = 'game-message-subtitle';
+                if (className === 'game-won') {
+                    subtitle.textContent = currentLanguage === 'zh' ? 
+                        `恭喜！您的最终得分：${this.score}` : 
+                        `Congratulations! Final Score: ${this.score}`;
+                } else if (className === 'game-over') {
+                    subtitle.textContent = currentLanguage === 'zh' ? 
+                        `您的最终得分：${this.score}` : 
+                        `Your Final Score: ${this.score}`;
+                } else if (className === 'game-stuck') {
+                    subtitle.textContent = currentLanguage === 'zh' ? 
+                        '您还可以使用撤销功能继续游戏' : 
+                        'You can still use undo to continue playing';
+                }
+                this.messageContainer.appendChild(subtitle);
 
                 this.messageContainer.className = 'game-message ' + className;
                 
