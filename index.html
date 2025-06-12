@@ -160,6 +160,45 @@
             padding-top: 20px;
         }
 
+        .language-switcher-fixed {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            padding: 3px;
+            gap: 2px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .lang-btn:hover {
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .lang-btn.active {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            font-weight: 600;
+        }
+
         h1 {
             font-size: 48px;
             font-weight: bold;
@@ -487,6 +526,15 @@
                 padding-top: 10px; 
                 margin-bottom: 5px; 
             }
+            .language-switcher-fixed {
+                top: 15px;
+                right: 15px;
+                padding: 2px;
+            }
+            .lang-btn {
+                font-size: 11px;
+                padding: 5px 10px;
+            }
             h1 { 
                 font-size: 36px; 
                 line-height: 1.1; 
@@ -529,15 +577,21 @@
 </head>
 <body>
     <div class="container">
+        <!-- 语言切换按钮 - 固定在屏幕右上角 -->
+        <div class="language-switcher-fixed">
+            <button class="lang-btn active" data-lang="zh" id="lang-zh">中文</button>
+            <button class="lang-btn" data-lang="en" id="lang-en">EN</button>
+        </div>
+
         <header class="header">
             <h1>2048</h1>
             <div class="score-container">
                 <div class="score-box">
-                    <div class="score-label">SCORE</div>
+                    <div class="score-label" data-i18n="score">SCORE</div>
                     <div class="score" id="score">0</div>
                 </div>
                 <div class="score-box">
-                    <div class="score-label">BEST</div>
+                    <div class="score-label" data-i18n="best">BEST</div>
                     <div class="best-score" id="best-score">0</div>
                 </div>
             </div>
@@ -564,57 +618,172 @@
         </main>
 
         <footer class="footer" role="contentinfo">
-            <div class="instructions">
+            <div class="instructions" data-i18n="instructions">
                 使用方向键或滑动屏幕来移动方块
             </div>
             
             <nav class="controls" role="navigation" aria-label="游戏控制">
-                <button class="btn" onclick="game.restart()" aria-label="重新开始游戏">重新开始</button>
-                <button class="btn" onclick="game.undo()" id="undoBtn" aria-label="撤销上一步操作">撤销 (<span id="undoCount">3</span>)</button>
+                <button class="btn" onclick="game.restart()" aria-label="重新开始游戏" data-i18n="restart">重新开始</button>
+                <button class="btn" onclick="game.undo()" id="undoBtn" aria-label="撤销上一步操作"><span data-i18n="undo">撤销</span> (<span id="undoCount">3</span>)</button>
             </nav>
             
             <article class="game-instructions">
-                <h2>游戏说明</h2>
-                <p>2048游戏是一款数字益智游戏，目标是在4x4的方格中，通过滑动方块，使相同数字的方块合并，最终达到2048的数字方块。玩家需要控制方块，将其移动到游戏界面上，当相同数字的方块碰撞时，它们会合并成它们和的数字。</p>
+                <h2 data-i18n="gameTitle">游戏说明</h2>
+                <p data-i18n="gameDescription">2048游戏是一款数字益智游戏，目标是在4x4的方格中，通过滑动方块，使相同数字的方块合并，最终达到2048的数字方块。玩家需要控制方块，将其移动到游戏界面上，当相同数字的方块碰撞时，它们会合并成它们和的数字。</p>
                 
-                <h3>游戏规则</h3>
+                <h3 data-i18n="gameRules">游戏规则</h3>
                 <ul>
-                    <li><strong>初始状态：</strong>游戏开始时，在4x4的方格中随机生成两个数字2或4。</li>
-                    <li><strong>滑动操作：</strong>玩家可以通过上下左右滑动屏幕，控制方块的移动。</li>
-                    <li><strong>合并规则：</strong>当两个相同数字的方块碰撞时，它们会合并成为它们的和。例如，2+2=4，4+4=8。</li>
-                    <li><strong>生成新方块：</strong>每次滑动后，会在空白的方格中随机生成一个2或4。</li>
-                    <li><strong>游戏结束：</strong>当方格全部被填充，并且没有可移动的方块时，游戏结束。</li>
-                    <li><strong>游戏目标：</strong>游戏的目标是在方格中生成一个数字2048。</li>
-                    <li><strong>游戏胜利：</strong>当游戏界面上出现数字2048的方块时，游戏胜利。</li>
+                    <li><strong data-i18n="initialState">初始状态：</strong><span data-i18n="initialStateDesc">游戏开始时，在4x4的方格中随机生成两个数字2或4。</span></li>
+                    <li><strong data-i18n="swipeOperation">滑动操作：</strong><span data-i18n="swipeOperationDesc">玩家可以通过上下左右滑动屏幕，控制方块的移动。</span></li>
+                    <li><strong data-i18n="mergeRules">合并规则：</strong><span data-i18n="mergeRulesDesc">当两个相同数字的方块碰撞时，它们会合并成为它们的和。例如，2+2=4，4+4=8。</span></li>
+                    <li><strong data-i18n="newTile">生成新方块：</strong><span data-i18n="newTileDesc">每次滑动后，会在空白的方格中随机生成一个2或4。</span></li>
+                    <li><strong data-i18n="gameEnd">游戏结束：</strong><span data-i18n="gameEndDesc">当方格全部被填充，并且没有可移动的方块时，游戏结束。</span></li>
+                    <li><strong data-i18n="gameGoal">游戏目标：</strong><span data-i18n="gameGoalDesc">游戏的目标是在方格中生成一个数字2048。</span></li>
+                    <li><strong data-i18n="gameWin">游戏胜利：</strong><span data-i18n="gameWinDesc">当游戏界面上出现数字2048的方块时，游戏胜利。</span></li>
                 </ul>
             </article>
             
             <!-- 版权信息 -->
             <div class="copyright">
                 <p>
-                    © 2024 液体玻璃2048游戏 
+                    <span data-i18n="copyright">© 2024 液体玻璃2048游戏</span>
                     <span class="divider">|</span>
-                    基于经典2048游戏改编
+                    <span data-i18n="basedOn">基于经典2048游戏改编</span>
                     <span class="divider">|</span>
-                    <a href="mailto:contact@2048game.com" rel="noopener">联系我们</a>
+                    <a href="mailto:contact@2048game.com" rel="noopener" data-i18n="contactUs">联系我们</a>
                 </p>
                 <p>
-                    本游戏完全免费，仅供娱乐学习使用
+                    <span data-i18n="freeGame">本游戏完全免费，仅供娱乐学习使用</span>
                     <span class="divider">|</span>
-                    <a href="#" onclick="showPrivacyPolicy()" rel="noopener">隐私政策</a>
+                    <a href="#" onclick="showPrivacyPolicy()" rel="noopener" data-i18n="privacyPolicy">隐私政策</a>
                     <span class="divider">|</span>
-                    <a href="#" onclick="showTerms()" rel="noopener">使用条款</a>
+                    <a href="#" onclick="showTerms()" rel="noopener" data-i18n="termsOfUse">使用条款</a>
                 </p>
                 <p>
-                    支持的浏览器：Chrome, Firefox, Safari, Edge
+                    <span data-i18n="supportedBrowsers">支持的浏览器：Chrome, Firefox, Safari, Edge</span>
                     <span class="divider">|</span>
-                    最佳体验分辨率：1920x1080
+                    <span data-i18n="bestResolution">最佳体验分辨率：1920x1080</span>
                 </p>
             </div>
         </footer>
     </div>
     
     <script>
+        // 国际化数据
+        const i18nData = {
+            zh: {
+                score: 'SCORE',
+                best: 'BEST',
+                instructions: '使用方向键或滑动屏幕来移动方块',
+                restart: '重新开始',
+                undo: '撤销',
+                gameTitle: '游戏说明',
+                gameDescription: '2048游戏是一款数字益智游戏，目标是在4x4的方格中，通过滑动方块，使相同数字的方块合并，最终达到2048的数字方块。玩家需要控制方块，将其移动到游戏界面上，当相同数字的方块碰撞时，它们会合并成它们和的数字。',
+                gameRules: '游戏规则',
+                initialState: '初始状态：',
+                initialStateDesc: '游戏开始时，在4x4的方格中随机生成两个数字2或4。',
+                swipeOperation: '滑动操作：',
+                swipeOperationDesc: '玩家可以通过上下左右滑动屏幕，控制方块的移动。',
+                mergeRules: '合并规则：',
+                mergeRulesDesc: '当两个相同数字的方块碰撞时，它们会合并成为它们的和。例如，2+2=4，4+4=8。',
+                newTile: '生成新方块：',
+                newTileDesc: '每次滑动后，会在空白的方格中随机生成一个2或4。',
+                gameEnd: '游戏结束：',
+                gameEndDesc: '当方格全部被填充，并且没有可移动的方块时，游戏结束。',
+                gameGoal: '游戏目标：',
+                gameGoalDesc: '游戏的目标是在方格中生成一个数字2048。',
+                gameWin: '游戏胜利：',
+                gameWinDesc: '当游戏界面上出现数字2048的方块时，游戏胜利。',
+                youWin: '你赢了!',
+                gameOver: '游戏结束',
+                noMoves: '无路可走!',
+                tryAgain: '再来一局',
+                undoAction: '撤销',
+                copyright: '© 2024 液体玻璃2048游戏',
+                basedOn: '基于经典2048游戏改编',
+                contactUs: '联系我们',
+                freeGame: '本游戏完全免费，仅供娱乐学习使用',
+                privacyPolicy: '隐私政策',
+                termsOfUse: '使用条款',
+                supportedBrowsers: '支持的浏览器：Chrome, Firefox, Safari, Edge',
+                bestResolution: '最佳体验分辨率：1920x1080'
+            },
+            en: {
+                score: 'SCORE',
+                best: 'BEST',
+                instructions: 'Use arrow keys or swipe to move tiles',
+                restart: 'New Game',
+                undo: 'Undo',
+                gameTitle: 'How to Play',
+                gameDescription: '2048 is a number puzzle game where the goal is to slide numbered tiles on a 4x4 grid to combine them and create a tile with the number 2048. When two tiles with the same number touch, they merge into one.',
+                gameRules: 'Game Rules',
+                initialState: 'Initial State:',
+                initialStateDesc: 'The game starts with two tiles (2 or 4) randomly placed on the 4x4 grid.',
+                swipeOperation: 'Swipe Operation:',
+                swipeOperationDesc: 'Players can swipe up, down, left, or right to move all tiles in that direction.',
+                mergeRules: 'Merge Rules:',
+                mergeRulesDesc: 'When two tiles with the same number collide, they merge into their sum. For example, 2+2=4, 4+4=8.',
+                newTile: 'New Tile Generation:',
+                newTileDesc: 'After each move, a new tile (2 or 4) appears randomly in an empty spot.',
+                gameEnd: 'Game Over:',
+                gameEndDesc: 'The game ends when the grid is full and no moves are possible.',
+                gameGoal: 'Game Goal:',
+                gameGoalDesc: 'The objective is to create a tile with the number 2048.',
+                gameWin: 'Victory:',
+                gameWinDesc: 'You win when a tile with 2048 appears on the board.',
+                youWin: 'You Win!',
+                gameOver: 'Game Over',
+                noMoves: 'No More Moves!',
+                tryAgain: 'Try Again',
+                undoAction: 'Undo',
+                copyright: '© 2024 Liquid Glass 2048 Game',
+                basedOn: 'Based on the classic 2048 game',
+                contactUs: 'Contact Us',
+                freeGame: 'This game is completely free for entertainment and learning purposes',
+                privacyPolicy: 'Privacy Policy',
+                termsOfUse: 'Terms of Use',
+                supportedBrowsers: 'Supported Browsers: Chrome, Firefox, Safari, Edge',
+                bestResolution: 'Best Experience Resolution: 1920x1080'
+            }
+        };
+
+        // 当前语言
+        let currentLanguage = localStorage.getItem('gameLanguage') || 'zh';
+
+        // 国际化函数
+        function updateLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('gameLanguage', lang);
+            
+            // 更新所有带有 data-i18n 属性的元素
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (i18nData[lang] && i18nData[lang][key]) {
+                    element.textContent = i18nData[lang][key];
+                }
+            });
+            
+            // 更新语言按钮状态
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`lang-${lang}`).classList.add('active');
+            
+            // 更新页面标题和meta信息
+            if (lang === 'en') {
+                document.title = 'Liquid Glass 2048 - Classic Number Puzzle Game | Play Free Online';
+                document.querySelector('meta[name="description"]').content = 'Liquid Glass 2048 is a beautiful number puzzle game with touch swipe and keyboard controls. Challenge your logic, merge number tiles to reach 2048! Free online game, no download required.';
+            } else {
+                document.title = '液体玻璃2048 - 经典数字益智游戏 | 在线免费玩';
+                document.querySelector('meta[name="description"]').content = '液体玻璃2048是一款精美的数字益智游戏，支持触屏滑动和键盘操作。挑战你的逻辑思维，合并数字方块达到2048！免费在线游戏，无需下载。';
+            }
+        }
+
+        // 获取翻译文本
+        function t(key) {
+            return i18nData[currentLanguage] && i18nData[currentLanguage][key] || key;
+        }
+
         // 全局变量
         let touchStartX = null;
         let touchStartY = null;
@@ -622,12 +791,18 @@
 
         // 隐私政策弹窗
         function showPrivacyPolicy() {
-            alert('隐私政策：\n\n本游戏不收集任何个人信息，仅在本地存储游戏数据（最高分等）。\n游戏数据仅保存在您的设备上，不会上传到任何服务器。\n我们承诺保护您的隐私安全。');
+            const privacyText = currentLanguage === 'zh' 
+                ? '隐私政策：\n\n本游戏不收集任何个人信息，仅在本地存储游戏数据（最高分等）。\n游戏数据仅保存在您的设备上，不会上传到任何服务器。\n我们承诺保护您的隐私安全。'
+                : 'Privacy Policy:\n\nThis game does not collect any personal information, only stores game data locally (such as high scores).\nGame data is only saved on your device and is not uploaded to any server.\nWe are committed to protecting your privacy and security.';
+            alert(privacyText);
         }
 
         // 使用条款弹窗
         function showTerms() {
-            alert('使用条款：\n\n1. 本游戏完全免费，仅供娱乐使用\n2. 禁止用于任何商业用途\n3. 请合理安排游戏时间\n4. 如有技术问题，请联系开发者\n5. 本游戏基于开源项目开发');
+            const termsText = currentLanguage === 'zh'
+                ? '使用条款：\n\n1. 本游戏完全免费，仅供娱乐使用\n2. 禁止用于任何商业用途\n3. 请合理安排游戏时间\n4. 如有技术问题，请联系开发者\n5. 本游戏基于开源项目开发'
+                : 'Terms of Use:\n\n1. This game is completely free for entertainment use only\n2. Commercial use is prohibited\n3. Please manage your gaming time reasonably\n4. Contact the developer if you have technical issues\n5. This game is based on open source projects';
+            alert(termsText);
         }
 
         class Game2048 {
@@ -840,12 +1015,12 @@
                         this.isAnimating = false;
                         
                         if (this.checkWin()) {
-                            this.showMessage('你赢了!', 'game-won');
+                            this.showMessage(t('youWin'), 'game-won');
                         } else if (this.checkGameOver()) {
                             if (this.undoCount === 0) {
-                                this.showMessage('游戏结束', 'game-over');
+                                this.showMessage(t('gameOver'), 'game-over');
                             } else {
-                                this.showMessage('无路可走!', 'game-stuck');
+                                this.showMessage(t('noMoves'), 'game-stuck');
                             }
                         }
                     });
@@ -1106,14 +1281,14 @@
                 if (className === 'game-stuck') {
                     const undoBtn = document.createElement('button');
                     undoBtn.className = 'restart-button';
-                    undoBtn.textContent = `撤销 (${this.undoCount})`;
+                    undoBtn.textContent = `${t('undoAction')} (${this.undoCount})`;
                     undoBtn.onclick = () => { this.hideMessage(); this.undo(); };
                     buttonContainer.appendChild(undoBtn);
                 }
 
                 const restartBtn = document.createElement('button');
                 restartBtn.className = 'restart-button';
-                restartBtn.textContent = '再来一局';
+                restartBtn.textContent = t('tryAgain');
                 restartBtn.onclick = () => game.restart();
                 buttonContainer.appendChild(restartBtn);
 
@@ -1128,6 +1303,20 @@
         }
 
         const game = new Game2048();
+
+        // 语言切换事件监听器
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化语言
+            updateLanguage(currentLanguage);
+            
+            // 添加语言切换按钮事件
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    updateLanguage(lang);
+                });
+            });
+        });
     </script>
 </body>
 </html>
