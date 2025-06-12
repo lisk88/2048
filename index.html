@@ -25,6 +25,16 @@
     <meta name="twitter:description" content="精美的液体玻璃风格2048游戏，支持多种操作方式，挑战你的智力极限！">
     <meta name="twitter:creator" content="@2048game">
     
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y84R0TQR9X"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-Y84R0TQR9X');
+    </script>
+
     <!-- 移动端优化 -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -173,6 +183,134 @@
             padding: 3px;
             gap: 2px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .background-switcher-fixed {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            padding: 8px 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .bg-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+            padding: 0;
+        }
+
+        .bg-btn:hover {
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* 背景选择器弹窗 */
+        .background-selector-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .background-selector-panel {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .background-selector-title {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .background-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .background-option {
+            aspect-ratio: 16/9;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .background-option:hover {
+            transform: scale(1.05);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .background-option.active {
+            border-color: white;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .background-option-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 11px;
+            padding: 6px 8px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .background-selector-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 10px 20px;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: block;
+            margin: 0 auto;
+            outline: none;
+        }
+
+        .background-selector-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
         }
 
         .lang-btn {
@@ -531,6 +669,23 @@
                 right: 15px;
                 padding: 2px;
             }
+            .background-switcher-fixed {
+                top: 15px;
+                left: 15px;
+                padding: 6px 12px;
+            }
+            .background-selector-panel {
+                padding: 20px;
+                max-width: 90%;
+            }
+            .background-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 10px;
+            }
+            .background-selector-title {
+                font-size: 18px;
+                margin-bottom: 20px;
+            }
             .lang-btn {
                 font-size: 11px;
                 padding: 5px 10px;
@@ -577,6 +732,11 @@
 </head>
 <body>
     <div class="container">
+        <!-- 背景切换按钮 - 固定在屏幕左上角 -->
+        <div class="background-switcher-fixed">
+            <button class="bg-btn" id="bg-switcher" title="切换背景">🎨</button>
+        </div>
+
         <!-- 语言切换按钮 - 固定在屏幕右上角 -->
         <div class="language-switcher-fixed">
             <button class="lang-btn active" data-lang="zh" id="lang-zh">中文</button>
@@ -667,6 +827,17 @@
             </div>
         </footer>
     </div>
+
+    <!-- 背景选择器弹窗 -->
+    <div class="background-selector-overlay" id="background-selector">
+        <div class="background-selector-panel">
+            <h3 class="background-selector-title" data-i18n="selectBackground">选择背景</h3>
+            <div class="background-grid" id="background-grid">
+                <!-- 背景选项将通过JavaScript动态生成 -->
+            </div>
+            <button class="background-selector-close" onclick="closeBackgroundSelector()" data-i18n="close">关闭</button>
+        </div>
+    </div>
     
     <script>
         // 国际化数据
@@ -706,7 +877,9 @@
                 privacyPolicy: '隐私政策',
                 termsOfUse: '使用条款',
                 supportedBrowsers: '支持的浏览器：Chrome, Firefox, Safari, Edge',
-                bestResolution: '最佳体验分辨率：1920x1080'
+                bestResolution: '最佳体验分辨率：1920x1080',
+                selectBackground: '选择背景',
+                close: '关闭'
             },
             en: {
                 score: 'SCORE',
@@ -743,7 +916,9 @@
                 privacyPolicy: 'Privacy Policy',
                 termsOfUse: 'Terms of Use',
                 supportedBrowsers: 'Supported Browsers: Chrome, Firefox, Safari, Edge',
-                bestResolution: 'Best Experience Resolution: 1920x1080'
+                bestResolution: 'Best Experience Resolution: 1920x1080',
+                selectBackground: 'Select Background',
+                close: 'Close'
             }
         };
 
@@ -789,6 +964,52 @@
         let touchStartY = null;
         let animationId = null;
 
+        // 背景样式数组
+        const backgroundStyles = [
+            {
+                name: '经典背景',
+                nameEn: 'Classic',
+                style: "url('macos-26.jpg') center center / cover no-repeat fixed, linear-gradient(135deg, #667eea 0%, #764ba2 50%, #48CAE4 100%)"
+            },
+            {
+                name: '紫蓝梦境',
+                nameEn: 'Purple Blue',
+                style: "radial-gradient(circle at 80% 80%, rgba(120, 119, 198, 0.3) 0%, rgba(0, 0, 0, 0) 50%), radial-gradient(circle at 20% 20%, rgba(72, 202, 228, 0.4) 0%, rgba(0, 0, 0, 0) 50%), radial-gradient(circle at 50% 30%, rgba(118, 75, 162, 0.3) 0%, rgba(0, 0, 0, 0) 50%), linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+            },
+            {
+                name: '粉橙暖阳',
+                nameEn: 'Pink Orange',
+                style: "radial-gradient(circle at 30% 70%, rgba(255, 154, 158, 0.4) 0%, rgba(0, 0, 0, 0) 50%), radial-gradient(circle at 70% 30%, rgba(250, 208, 196, 0.3) 0%, rgba(0, 0, 0, 0) 50%), radial-gradient(circle at 50% 50%, rgba(255, 206, 84, 0.3) 0%, rgba(0, 0, 0, 0) 50%), linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%)"
+            },
+            {
+                name: '翠绿海洋',
+                nameEn: 'Green Ocean',
+                style: "radial-gradient(circle at 60% 40%, rgba(79, 172, 254, 0.4) 0%, rgba(0, 0, 0, 0) 50%), radial-gradient(circle at 40% 60%, rgba(0, 242, 96, 0.3) 0%, rgba(0, 0, 0, 0) 50%), radial-gradient(circle at 80% 20%, rgba(5, 117, 230, 0.3) 0%, rgba(0, 0, 0, 0) 50%), linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+            },
+            {
+                name: '紫粉魅惑',
+                nameEn: 'Purple Pink',
+                style: "radial-gradient(circle at 25% 75%, rgba(168, 85, 247, 0.4) 0%, rgba(0, 0, 0, 0) 50%), radial-gradient(circle at 75% 25%, rgba(236, 72, 153, 0.3) 0%, rgba(0, 0, 0, 0) 50%), radial-gradient(circle at 50% 50%, rgba(139, 69, 19, 0.2) 0%, rgba(0, 0, 0, 0) 50%), linear-gradient(135deg, #a855f7 0%, #ec4899 100%)"
+            },
+            {
+                name: '金橙火焰',
+                nameEn: 'Golden Fire',
+                style: "radial-gradient(circle at 90% 10%, rgba(251, 191, 36, 0.4) 0%, rgba(0, 0, 0, 0) 50%), radial-gradient(circle at 10% 90%, rgba(249, 115, 22, 0.3) 0%, rgba(0, 0, 0, 0) 50%), radial-gradient(circle at 50% 50%, rgba(239, 68, 68, 0.3) 0%, rgba(0, 0, 0, 0) 50%), linear-gradient(135deg, #fbbf24 0%, #f97316 50%, #ef4444 100%)"
+            },
+            {
+                name: '青蓝清新',
+                nameEn: 'Cyan Blue',
+                style: "radial-gradient(circle at 40% 80%, rgba(6, 182, 212, 0.4) 0%, rgba(0, 0, 0, 0) 50%), radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.3) 0%, rgba(0, 0, 0, 0) 50%), radial-gradient(circle at 20% 40%, rgba(16, 185, 129, 0.3) 0%, rgba(0, 0, 0, 0) 50%), linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #10b981 100%)"
+            },
+            {
+                name: '深紫神秘',
+                nameEn: 'Deep Purple',
+                style: "radial-gradient(circle at 60% 60%, rgba(99, 102, 241, 0.4) 0%, rgba(0, 0, 0, 0) 50%), radial-gradient(circle at 30% 30%, rgba(139, 92, 246, 0.3) 0%, rgba(0, 0, 0, 0) 50%), radial-gradient(circle at 80% 40%, rgba(168, 85, 247, 0.3) 0%, rgba(0, 0, 0, 0) 50%), linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%)"
+            }
+        ];
+
+        let currentBackgroundIndex = 0;
+
         // 隐私政策弹窗
         function showPrivacyPolicy() {
             const privacyText = currentLanguage === 'zh' 
@@ -803,6 +1024,67 @@
                 ? '使用条款：\n\n1. 本游戏完全免费，仅供娱乐使用\n2. 禁止用于任何商业用途\n3. 请合理安排游戏时间\n4. 如有技术问题，请联系开发者\n5. 本游戏基于开源项目开发'
                 : 'Terms of Use:\n\n1. This game is completely free for entertainment use only\n2. Commercial use is prohibited\n3. Please manage your gaming time reasonably\n4. Contact the developer if you have technical issues\n5. This game is based on open source projects';
             alert(termsText);
+        }
+
+        // 显示背景选择器
+        function showBackgroundSelector() {
+            const selector = document.getElementById('background-selector');
+            const grid = document.getElementById('background-grid');
+            
+            // 清空网格
+            grid.innerHTML = '';
+            
+            // 生成背景选项
+            backgroundStyles.forEach((bg, index) => {
+                const option = document.createElement('div');
+                option.className = 'background-option';
+                option.style.background = bg.style;
+                
+                if (index === currentBackgroundIndex) {
+                    option.classList.add('active');
+                }
+                
+                const label = document.createElement('div');
+                label.className = 'background-option-label';
+                label.textContent = currentLanguage === 'zh' ? bg.name : bg.nameEn;
+                
+                option.appendChild(label);
+                option.addEventListener('click', () => selectBackground(index));
+                grid.appendChild(option);
+            });
+            
+            selector.style.display = 'flex';
+        }
+
+        // 关闭背景选择器
+        function closeBackgroundSelector() {
+            document.getElementById('background-selector').style.display = 'none';
+        }
+
+        // 选择背景
+        function selectBackground(index) {
+            currentBackgroundIndex = index;
+            document.body.style.background = backgroundStyles[index].style;
+            localStorage.setItem('backgroundIndex', currentBackgroundIndex);
+            
+            // 更新选中状态
+            document.querySelectorAll('.background-option').forEach((option, i) => {
+                option.classList.toggle('active', i === index);
+            });
+            
+            // 延迟关闭选择器，让用户看到选择效果
+            setTimeout(() => {
+                closeBackgroundSelector();
+            }, 300);
+        }
+
+        // 初始化背景
+        function initBackground() {
+            const savedIndex = localStorage.getItem('backgroundIndex');
+            if (savedIndex !== null && savedIndex >= 0 && savedIndex < backgroundStyles.length) {
+                currentBackgroundIndex = parseInt(savedIndex);
+                document.body.style.background = backgroundStyles[currentBackgroundIndex].style;
+            }
         }
 
         class Game2048 {
@@ -1309,12 +1591,25 @@
             // 初始化语言
             updateLanguage(currentLanguage);
             
+            // 初始化背景
+            initBackground();
+            
             // 添加语言切换按钮事件
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const lang = this.getAttribute('data-lang');
                     updateLanguage(lang);
                 });
+            });
+            
+            // 添加背景切换按钮事件
+            document.getElementById('bg-switcher').addEventListener('click', showBackgroundSelector);
+            
+            // 点击背景选择器外部区域关闭
+            document.getElementById('background-selector').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeBackgroundSelector();
+                }
             });
         });
     </script>
