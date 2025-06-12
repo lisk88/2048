@@ -1395,31 +1395,48 @@
                 document.removeEventListener('keydown', this.keydownHandler);
                 document.addEventListener('keydown', this.keydownHandler);
                 
+                // 获取游戏容器元素
+                const gameContainer = document.querySelector('.game-container');
+                
                 let touchStarted = false;
-                document.addEventListener('touchstart', (e) => {
+                let isInGameArea = false;
+                
+                // 触摸开始事件 - 只在游戏区域内监听
+                gameContainer.addEventListener('touchstart', (e) => {
                     if (e.target.closest('button')) return;
                     touchStarted = true;
+                    isInGameArea = true;
                     this.startX = e.touches[0].clientX;
                     this.startY = e.touches[0].clientY;
                 }, { passive: true });
                 
+                // 触摸移动事件 - 只阻止游戏区域内的默认行为
                 document.addEventListener('touchmove', (e) => {
-                    if (touchStarted) {
+                    if (touchStarted && isInGameArea) {
                         e.preventDefault();
                     }
                 }, { passive: false });
                 
+                // 触摸结束事件 - 只处理游戏区域内的滑动
                 document.addEventListener('touchend', (e) => {
-                    if (touchStarted) {
+                    if (touchStarted && isInGameArea) {
                         touchStarted = false;
+                        isInGameArea = false;
                         this.endX = e.changedTouches[0].clientX;
                         this.endY = e.changedTouches[0].clientY;
                         this.handleSwipe();
                     }
                 }, { passive: true });
                 
+                // 触摸取消事件 - 重置状态
+                document.addEventListener('touchcancel', (e) => {
+                    touchStarted = false;
+                    isInGameArea = false;
+                }, { passive: true });
+                
+                // 鼠标事件 - 只在游戏区域内处理
                 let mouseDown = false;
-                document.addEventListener('mousedown', (e) => {
+                gameContainer.addEventListener('mousedown', (e) => {
                     if (e.target.closest('button')) return;
                     mouseDown = true;
                     this.startX = e.clientX;
@@ -1433,6 +1450,11 @@
                         this.handleSwipe();
                         mouseDown = false;
                     }
+                });
+                
+                // 鼠标离开游戏区域时重置状态
+                gameContainer.addEventListener('mouseleave', (e) => {
+                    mouseDown = false;
                 });
             }
             
